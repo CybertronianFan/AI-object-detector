@@ -32,7 +32,7 @@ while True:
         break
     
     # Run detection
-    results = model(frame)
+    results = model(frame, verbose=False)
     
     # Draw bounding boxes
     annotated_frame = results[0].plot()
