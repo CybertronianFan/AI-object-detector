@@ -1,8 +1,10 @@
 import cv2
 from ultralytics import YOLO
 import torch
+import time
 
-# Checks the GPU model (I used an RTX 5060) and prints the model. 
+
+# Checks the GPU model (I used an RTX 5060) and prints the model
 print(f"CUDA available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
     print(f"GPU: {torch.cuda.get_device_name(0)}")
@@ -25,6 +27,8 @@ if not cap.isOpened():
 
 print("Press 'q' to quit")
 
+prev_time = time.time() # Get the "previous" time
+
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -36,7 +40,18 @@ while True:
     
     # Draw bounding boxes
     annotated_frame = results[0].plot()
-    
+
+    #FPS calculation
+
+    curr_time = time.time() # Get the current time
+    fps = 1 / (curr_time - prev_time) # Calculates fps
+    prev_time = curr_time # Updates prev_time for the next loop
+
+    # Put the FPS onto the frame
+
+    cv2.putText(annotated_frame, f"FPS: {fps:.1f}", (10, 30), # Puts the FPS to 1 dp  at x = 10 and y = 30
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2) # Uses the font style Hershey Simplex, at a size of 1, Green and at a thickness of 2
+
     # Show result
     cv2.imshow('Object Tracker', annotated_frame)
     
