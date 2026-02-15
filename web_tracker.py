@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask, Response, render_template
 import cv2
 from ultralytics import YOLO
 import torch
@@ -69,19 +69,7 @@ def video_feed():
 # Route for homepage
 @app.route('/')
 def home():
-    return """
-    <html>
-        <head>
-            <link rel="stylesheet" href="/static/stylesheet.css">
-            <title>Object Tracker</title>
-        </head>
-        <body>
-            <h1>Webcam Object Tracker</h1>
-            <img src="/video_feed" width="640">
-            <p style="color: rgb(0,255,255);">Made by CybertronianFan on Github.</p>
-        </body>
-    </html>
-    """
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
