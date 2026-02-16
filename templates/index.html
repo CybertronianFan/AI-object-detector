@@ -3,17 +3,25 @@
     <head>
         <meta charset="UTF-8">
         <title>Object Tracker</title>
-        <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="/static/stylesheet.css">
     </head>
     <body>
         <h1>Webcam Object Tracker</h1>
+
+        <h3 id="fps-display">FPS: --</h3> 
         
         <img src="/video_feed" width="640">
         
-        <p style="color: rgb(0,255,255)">Made by CybertronianFan on Github</p>
-
+        <p style="color: rgb(0,255,255)">Made by CybertronianFan on <a href="https://github.com/CybertronianFan" target="_blank"  style="color: rgb(0,255,255)">Github</a></p>
+        <p> If you would like to see some of the documentation please see my  <a href="https://github.com/CybertronianFan/Object-Detector" target="_blank"> Github repository</a></p>
         <script>
-            console.log("test")
+            setInterval(function(){
+                fetch('/get_fps')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('fps-display').innerText = 'FPS: ' + data;
+                })
+            }, 1000);
         </script>
     </body>
 </html>

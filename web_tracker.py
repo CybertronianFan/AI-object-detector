@@ -14,6 +14,8 @@ if torch.cuda.is_available():
 # Load model
 model = YOLO('yolov8n.pt')
 
+current_fps = 0
+
 # Camera setup
 cap = None
 for i in range(3):
@@ -29,6 +31,7 @@ if cap is None or not cap.isOpened():
     exit()
 
 def generate_frames():
+    global current_fps 
     prev_time = time.time()  # Get the "previous" time
     
     while True:
@@ -46,11 +49,9 @@ def generate_frames():
         # FPS calculation
         curr_time = time.time()
         fps = 1 / (curr_time - prev_time)
+        fps = round(fps, 1)
         prev_time = curr_time
-        
-        # Put the FPS onto the frame
-        cv2.putText(annotated_frame, f"FPS: {fps:.1f}", (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        current_fps = fps # Saves the fps as a global variable 
         
         # Convert frame to JPEG for browser
         ret, buffer = cv2.imencode('.jpg', annotated_frame)
@@ -71,5 +72,12 @@ def video_feed():
 def home():
     return render_template('index.html')
 
+# Route for fps
+@app.route('/get_fps')
+def get_fps():
+    return str(current_fps)
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
+
